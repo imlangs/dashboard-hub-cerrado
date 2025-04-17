@@ -126,18 +126,15 @@ with aba_clientes:
 with aba_financeiro:
     st.subheader("💰 Indicadores Financeiros - Receita Total, Resultado Operacional e MRR")
 
-    # Filtrando dados financeiros do mês selecionado
     receita_mes = df_filtrado[df_filtrado["Indicador"] == "Receita Total"]["Valor"].sum()
     resultado_operacional_mes = df_filtrado[df_filtrado["Indicador"] == "Resultado Operacional"]["Valor"].sum()
     mrr_total = df_filtrado[df_filtrado["Indicador"] == "MRR"]["Valor"].sum()
 
-    # Exibindo os cards
     col1, col2, col3 = st.columns(3)
     col1.metric("Receita do Mês", formatar_moeda(receita_mes))
     col2.metric("Resultado Operacional do Mês", formatar_moeda(resultado_operacional_mes))
     col3.metric("MRR", formatar_moeda(mrr_total))
 
-    # Preparando dados para os gráficos de evolução
     df_tidy = df.copy()
     df_tidy["Data"] = pd.to_datetime(df_tidy["Data"])
     df_tidy["Ano"] = df_tidy["Data"].dt.year
@@ -147,7 +144,6 @@ with aba_financeiro:
     indicadores = ["Receita Total", "Resultado Operacional"]
     df_fin = df_tidy[df_tidy["Indicador"].isin(indicadores)]
 
-    # Iterando sobre os indicadores para gerar os gráficos
     for indicador in indicadores:
         st.markdown(f"### {indicador}")
         df_ind = df_fin[df_fin["Indicador"] == indicador].copy()
@@ -155,7 +151,6 @@ with aba_financeiro:
 
         fig = go.Figure()
 
-        # Adicionando linhas para cada ano (2024 e 2025)
         for ano in sorted(df_ind["Ano"].unique()):
             df_ano = df_ind[df_ind["Ano"] == ano]
             fig.add_trace(go.Scatter(
@@ -207,9 +202,8 @@ with aba_ocupacao:
     st.markdown("## 🏢 Ocupação do Habitat")
     st.markdown("### Ocupação mensal das áreas do Hub Cerrado")
 
-    # Definindo todos os indicadores, incluindo o "Ocupação do Habitat"
     indicadores_ocupacao = [
-        "Ocupação do Habitat",  # Este agora aparece primeiro
+        "Ocupação do Habitat",
         "Estações de Trabalho",
         "Salas Privativas",
         "Auditório Ipê"
@@ -218,10 +212,8 @@ with aba_ocupacao:
     df_ocupacao = df[df["Indicador"].isin(indicadores_ocupacao)].copy()
     df_mes_atual_ocupacao = df_ocupacao[(df_ocupacao["Ano"] == ano_selecionado) & (df_ocupacao["Mês"] == mes_selecionado)]
 
-    # Exibindo o indicador "Ocupação do Habitat"
     col1, col2, col3, col4 = st.columns(4)
 
-    # Para "Ocupação do Habitat"
     valor_ocupacao_habitat = df_mes_atual_ocupacao[df_mes_atual_ocupacao["Indicador"] == "Ocupação do Habitat"]["Valor"].values
     meta_ocupacao_habitat = df_mes_atual_ocupacao[df_mes_atual_ocupacao["Indicador"] == "Ocupação do Habitat"]["Meta"].values
 
@@ -234,7 +226,6 @@ with aba_ocupacao:
 
     col1.metric(label="Ocupação do Habitat", value=valor_ocupacao_habitat_fmt, delta=f"Meta: {meta_ocupacao_habitat_fmt}")
 
-    # Exibindo os outros indicadores
     for col, indicador in zip([col2, col3, col4], indicadores_ocupacao[1:]):  # Começando do segundo indicador
         valor = df_mes_atual_ocupacao[df_mes_atual_ocupacao["Indicador"] == indicador]["Valor"].values
         meta = df_mes_atual_ocupacao[df_mes_atual_ocupacao["Indicador"] == indicador]["Meta"].values
@@ -248,7 +239,6 @@ with aba_ocupacao:
 
         col.metric(label=indicador, value=valor_fmt, delta=f"Meta: {meta_fmt}")
 
-    # Gráficos de evolução
     st.markdown("### 📈 Evolução da Ocupação")
 
     import plotly.express as px
