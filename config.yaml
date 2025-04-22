@@ -1,0 +1,6 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@hubcerrado.com
+      name: Admin
+      password: $2b$12$qJHF.1QwrqRKyXVwF9Yfn.YtGGwi8Zo/YQvZmE1kHPZpwQGn5gu9q # Default password: admin123 
