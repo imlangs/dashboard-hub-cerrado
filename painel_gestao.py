@@ -11,21 +11,17 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Configure Streamlit page
 st.set_page_config(
     page_title=os.getenv("STREAMLIT_APP_NAME", "Painel de Gestão Hub Cerrado"),
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Load authentication config
 with open(os.getenv("CONFIG_PATH", "config.yaml")) as file:
     config = yaml.load(file, Loader=SafeLoader)
 
-# Create an authentication object
 authenticator = stauth.Authenticate(
     config['credentials'],
     "hub_cerrado_dashboard",
@@ -33,12 +29,10 @@ authenticator = stauth.Authenticate(
     cookie_expiry_days=30
 )
 
-# Add login form to sidebar
 with st.sidebar:
     st.title("Login")
     name, authentication_status, username = authenticator.login("Login")
 
-# Handle authentication status
 if authentication_status == False:
     st.sidebar.error("Username/password is incorrect")
     st.stop()
@@ -46,12 +40,10 @@ elif authentication_status == None:
     st.sidebar.warning("Please enter your username and password")
     st.stop()
 elif authentication_status:
-    # Show welcome message and logout button in sidebar
     st.sidebar.success(f"Welcome *{name}*")
     with st.sidebar:
         authenticator.logout("Logout")
 
-    # Main dashboard content
     # Carregar logo
     logo_path = "Logo-Hub-Cerrado_350x100-1.png.webp"
     if Path(logo_path).exists():

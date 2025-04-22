@@ -6,7 +6,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# Initialize session state for authentication
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -22,17 +21,14 @@ def check_password():
             st.session_state.authenticated = False
             st.error("😕 Usuário ou senha incorretos")
 
-    # Show login form
     st.title("🔒 Login Hub Cerrado")
     
-    # Center the image
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         st.image("Logo-Hub-Cerrado_350x100-1.png.webp", width=350)
     
     st.write("Por favor, faça login para acessar o dashboard.")
     
-    # Create login form
     with st.form("login_form"):
         st.text_input("Usuário", key="username")
         st.text_input("Senha", type="password", key="password")

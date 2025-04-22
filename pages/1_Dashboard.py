@@ -7,12 +7,10 @@ from plotly.subplots import make_subplots
 from pathlib import Path
 import plotly.express as px
 
-# Check authentication
 if "authenticated" not in st.session_state or not st.session_state.authenticated:
     st.error("⚠️ Por favor, faça login primeiro!")
     st.stop()
 
-# Configure page
 st.set_page_config(
     page_title="Dashboard - Hub Cerrado",
     page_icon="📊",
@@ -20,14 +18,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Utility functions
 def formatar_moeda(valor):
     return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def formatar_percentual(valor):
     return f"{valor:.2%}".replace(".", ",")
 
-# Main dashboard content
 try:
     # Carregar logo
     logo_path = "Logo-Hub-Cerrado_350x100-1.png.webp"
@@ -40,7 +36,7 @@ try:
         st.error(f"Arquivo {file_path} não encontrado. Por favor, verifique se o arquivo existe no diretório correto.")
         st.stop()
         
-    @st.cache_data(ttl=3600)  # Cache data for 1 hour
+    @st.cache_data(ttl=3600)
     def load_data():
         df = pd.read_excel(file_path)
         df.columns = df.columns.str.strip()
