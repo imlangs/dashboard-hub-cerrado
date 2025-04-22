@@ -51,19 +51,26 @@ elif authentication_status:
 
     try:
         # Carregar dados
-        file_path = "dados_consolidados.xlsx"
-        if not Path(file_path).exists():
-            st.error(f"Arquivo {file_path} não encontrado. Por favor, verifique se o arquivo existe no diretório correto.")
-            st.stop()
-            
-        @st.cache_data(ttl=3600)  # Cache data for 1 hour
-        def load_data():
-            df = pd.read_excel(file_path)
-            df.columns = df.columns.str.strip()
-            df["Data"] = pd.to_datetime(df["Data"])
-            return df
+        st.title("Dashboard Hub Cerrado")
 
-        df = load_data()
+        # Upload do arquivo pelo usuário
+        uploaded_file = st.file_uploader("Faça upload do arquivo Excel (.xlsx)", type=["xlsx"])
+
+        if uploaded_file is not None:
+            @st.cache_data(ttl=3600)
+            def load_data(file):
+                df = pd.read_excel(file)
+                df.columns = df.columns.str.strip()
+                df["Data"] = pd.to_datetime(df["Data"])
+                return df
+
+            df = load_data(uploaded_file)
+
+            st.success("Arquivo carregado com sucesso!")
+            st.write(df.head())  # Exibe um preview dos dados
+
+        else:
+            st.warning("Por favor, faça upload do arquivo Excel para continuar.")
         
         df["Ano"] = df["Data"].dt.year
         df["Mês"] = df["Data"].dt.month
